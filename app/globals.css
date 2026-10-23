@@ -234,11 +234,16 @@ button {
 .cartoon-launch-overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   display: grid;
   place-items: center;
   overflow: hidden;
+  box-sizing: border-box;
   padding: 24px;
+  isolation: isolate;
   background:
     radial-gradient(
       circle at 20% 20%,
@@ -251,7 +256,6 @@ button {
       transparent 35%
     ),
     #daebe3;
-  animation: cartoon-scene-enter 0.35s ease-out both;
 }
 
 .cartoon-launch-scene {
