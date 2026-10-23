@@ -56,3 +56,176 @@ button {
   background: var(--sky-blue);
   color: var(--deep-sage);
 }
+
+/* =========================================
+   TOONFORGE — ANIMATED GALAXY
+========================================= */
+
+.galaxy-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.galaxy-orbit-outer {
+  width: 310px;
+  height: 310px;
+  margin-left: -155px;
+  margin-top: -155px;
+  animation: galaxy-spin 18s linear infinite;
+}
+
+.galaxy-orbit-middle {
+  width: 250px;
+  height: 250px;
+  margin-left: -125px;
+  margin-top: -125px;
+  border-color: rgba(255, 255, 255, 0.7);
+  animation: galaxy-spin-reverse 12s linear infinite;
+}
+
+.galaxy-orbit-inner {
+  width: 195px;
+  height: 195px;
+  margin-left: -97.5px;
+  margin-top: -97.5px;
+  border-color: rgba(153, 205, 216, 0.7);
+  animation: galaxy-spin 8s linear infinite;
+}
+
+.galaxy-planet {
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
+}
+
+.galaxy-planet-mint {
+  background: #657166;
+}
+
+.galaxy-planet-blue {
+  background: #99cdd8;
+}
+
+.galaxy-planet-peach {
+  background: #f3c3b2;
+}
+
+.galaxy-center {
+  animation: galaxy-hover 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.galaxy-clapper {
+  animation: galaxy-clapper-glow 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.galaxy-glow {
+  animation: galaxy-pulse 6s ease-in-out infinite;
+}
+
+.galaxy-float {
+  animation: galaxy-hover 4s ease-in-out infinite;
+}
+
+.galaxy-float-delayed {
+  animation: galaxy-hover 5s ease-in-out infinite reverse;
+}
+
+.galaxy-float-star {
+  animation-delay: -1.5s;
+}
+
+@keyframes galaxy-spin {
+  from {
+    transform: rotate(0deg) rotateX(12deg);
+  }
+  to {
+    transform: rotate(360deg) rotateX(12deg);
+  }
+}
+
+@keyframes galaxy-spin-reverse {
+  from {
+    transform: rotate(360deg) rotateX(22deg);
+  }
+  to {
+    transform: rotate(0deg) rotateX(22deg);
+  }
+}
+
+@keyframes galaxy-hover {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+@keyframes galaxy-clapper-glow {
+  0%,
+  100% {
+    transform: rotate(-3deg) scale(1);
+  }
+  50% {
+    transform: rotate(3deg) scale(1.05);
+  }
+}
+
+@keyframes galaxy-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    scale: 0.9;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.12;
+  }
+}
+
+@media (max-width: 420px) {
+  .galaxy-orbit-outer {
+    width: 270px;
+    height: 270px;
+    margin-left: -135px;
+    margin-top: -135px;
+  }
+
+  .galaxy-orbit-middle {
+    width: 220px;
+    height: 220px;
+    margin-left: -110px;
+    margin-top: -110px;
+  }
+
+  .galaxy-orbit-inner {
+    width: 175px;
+    height: 175px;
+    margin-left: -87.5px;
+    margin-top: -87.5px;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .galaxy-orbit,
+  .galaxy-center,
+  .galaxy-clapper,
+  .galaxy-glow,
+  .galaxy-float,
+  .galaxy-float-delayed {
+    animation: none !important;
+  }
+}

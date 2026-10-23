@@ -70,7 +70,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
               title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
             >
               ☰
-              <span>{sidebarOpen ? "Collapse" : "Expand"}</span>
             </button>
 
             <button

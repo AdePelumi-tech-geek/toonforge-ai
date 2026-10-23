@@ -40,7 +40,7 @@ export default function Sidebar({
             ✦
           </span>
 
-          {!collapsed && (
+          {! collapsed && (
             <span className="min-w-0">
               <span className="block text-xl font-black tracking-tight text-[#657166]">
                 ToonForge
@@ -141,7 +141,7 @@ export default function Sidebar({
           </div>
         </>
       )}
-
+ 
     {onToggleCollapse && (
         <button
             onClick={onToggleCollapse}
