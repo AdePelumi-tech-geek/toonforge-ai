@@ -227,42 +227,55 @@ export default function HomePage() {
             </span>
           </div>
 
+         
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {quickActions.map((action) => (
               <Link
                 key={action.href}
                 href={action.href}
-                className="group flex min-w-0 flex-col rounded-[26px] border border-[#657166]/10 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-[#99CDD8] hover:shadow-xl hover:shadow-[#657166]/5 sm:p-6"
+                className={`group relative flex min-w-0 flex-col overflow-hidden rounded-[26px] border border-[#657166]/10 bg-cover bg-center p-5 transition duration-200 hover:-translate-y-1 hover:border-[#99CDD8] hover:shadow-xl hover:shadow-[#657166]/10 sm:p-6 ${
+                  action.href === "/create-animation"
+                    ? "bg-[url('https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&w=900&q=80')]"
+                    : action.href === "/script-studio"
+                      ? "bg-[url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80')]"
+                      : "bg-[url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=900&q=80')]"
+                }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <span
-                    className={`flex h-14 w-14 items-center justify-center rounded-2xl text-2xl text-[#526054] ${action.color}`}
-                  >
-                    {action.icon}
-                  </span>
+            {/* Light overlay */}
+            <span className="absolute inset-0 bg-[#F7F5EF]/85 transition duration-300 group-hover:bg-[#F7F5EF]/70" />
 
-                  <span className="text-xs font-bold tracking-widest text-[#657166]/40">
-                    {action.number}
-                  </span>
-                </div>
+            {/* Card content */}
+            <div className="relative z-10 flex h-full flex-col">
+              <div className="flex items-start justify-between gap-3">
+                <span
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl text-2xl text-[#526054] ${action.color}`}
+                >
+                  {action.icon}
+                </span>
 
-                <h3 className="mt-6 text-lg font-extrabold text-[#354239]">
-                  {action.title}
-                </h3>
+            <span className="text-xs font-bold tracking-widest text-[#657166]/60">
+              {action.number}
+            </span>
+          </div>
 
-                <p className="mt-2 flex-1 text-sm leading-6 text-[#657166]/70">
-                  {action.description}
-                </p>
+          <h3 className="mt-6 text-lg font-extrabold text-[#354239]">
+            {action.title}
+          </h3>
 
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#657166]">
+          <p className="mt-2 flex-1 text-sm leading-6 text-[#657166]/90">
+            {action.description}
+          </p>
+
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#354239]">
                   Open workspace
                   <span className="transition-transform group-hover:translate-x-1">
                     →
                   </span>
                 </span>
-              </Link>
-            ))}
-          </div>
+              </div>
+            </Link>
+          ))}
+        </div>
         </section>
 
         {/* Recent projects */}
