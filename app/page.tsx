@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const quickActions = [
@@ -28,8 +32,60 @@ const quickActions = [
 ];
 
 export default function HomePage() {
+  const router = useRouter();
+  const [launching, setLaunching] = useState(false);
+
+  function launchAnimation() {
+    if (launching) return;
+
+    setLaunching(true);
+
+    window.setTimeout(() => {
+      router.push("/create-animation");
+    }, 5000);
+  }
   return (
-    <div className="space-y-8 sm:space-y-10">
+          <div className="space-y-8 sm:space-y-10">
+            
+      {launching && (
+        <div
+          className="cartoon-launch-overlay"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="cartoon-launch-scene">
+            <div className="cartoon-launch-stars">
+              ✦ <span>✧</span> ✨ <span>✦</span>
+            </div>
+
+            <div className="cartoon-launch-orbit">
+              <div className="cartoon-launch-character">
+                <div className="cartoon-character-face">
+                  <span className="cartoon-eye">●</span>
+                  <span className="cartoon-eye">●</span>
+                </div>
+                <div className="cartoon-character-smile" />
+                <div className="cartoon-character-body">TF</div>
+                <div className="cartoon-character-foot foot-left" />
+                <div className="cartoon-character-foot foot-right" />
+              </div>
+            </div>
+
+            <div className="cartoon-launch-title">
+              LET'S MAKE MAGIC!
+            </div>
+
+            <p className="cartoon-launch-caption">
+              Your imagination is taking off...
+            </p>
+
+            <div className="cartoon-launch-progress">
+              <div />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Welcome hero */}
       <section className="relative isolate overflow-hidden rounded-[32px] bg-[#DAEBE3] p-6 sm:p-10 lg:p-12">
         <div className="pointer-events-none absolute -right-16 -top-20 -z-10 h-64 w-64 rounded-full bg-[#99CDD8]/60 blur-3xl" />
@@ -53,15 +109,17 @@ export default function HomePage() {
               animation ideas to life — all from one creative workspace.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/create-animation"
-                className="inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-[#657166] px-6 py-4 text-sm font-bold text-white shadow-lg shadow-[#657166]/15 transition hover:-translate-y-0.5 hover:bg-[#526054]"
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">         
+              <button
+                type="button"
+                onClick={launchAnimation}
+                disabled={launching}
+                className="inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-[#657166] px-6 py-4 text-sm font-bold text-white shadow-lg shadow-[#657166]/15 transition hover:-translate-y-0.5 hover:bg-[#526054] disabled:cursor-wait"
               >
                 <span className="text-lg">✦</span>
-                Create an animation
-                <span>→</span>
-              </Link>
+                {launching ? "Magic is happening..." : "Create an animation"}
+                <span>{launching ? "✨" : "→"}</span>
+              </button>
 
               <Link
                 href="/my-projects"
