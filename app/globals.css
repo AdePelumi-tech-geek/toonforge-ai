@@ -466,3 +466,218 @@ button {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* TOONFORGE NAVIGATION TRANSITION */
+.toonforge-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 20% 20%, #99cdd8b3, transparent 35%),
+    radial-gradient(circle at 80% 75%, #f3c3b2a6, transparent 35%), #daebe3;
+}
+
+.toonforge-transition-scene {
+  position: relative;
+  display: flex;
+  width: min(100%, 480px);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.toonforge-transition-stars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-around;
+  color: #657166;
+  font-size: 30px;
+  pointer-events: none;
+}
+
+.toonforge-transition-stars span {
+  animation: toonforge-star 0.7s ease-in-out infinite alternate;
+}
+
+.toonforge-transition-stars span:nth-child(even) {
+  color: #f3c3b2;
+  animation-delay: 0.3s;
+}
+
+.toonforge-transition-orbit {
+  display: grid;
+  width: 230px;
+  height: 230px;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 18px #ffffff29,
+    0 0 60px #65716620;
+  animation: toonforge-spin 4s linear infinite;
+}
+
+.toonforge-transition-character {
+  position: relative;
+  display: flex;
+  width: 108px;
+  height: 112px;
+  flex-direction: column;
+  align-items: center;
+  border: 3px solid #526054;
+  border-radius: 48% 48% 40% 40%;
+  background: #fde8d3;
+  box-shadow: 0 12px 0 #65716620;
+  animation: toonforge-bounce 0.65s ease-in-out infinite alternate;
+}
+
+.toonforge-transition-face {
+  display: flex;
+  gap: 23px;
+  margin-top: 30px;
+}
+
+.toonforge-transition-face span {
+  width: 7px;
+  height: 9px;
+  border-radius: 50%;
+  background: #354239;
+}
+
+.toonforge-transition-smile {
+  width: 22px;
+  height: 10px;
+  margin-top: 5px;
+  border-bottom: 3px solid #354239;
+  border-radius: 50%;
+}
+
+.toonforge-transition-body {
+  position: absolute;
+  bottom: -20px;
+  display: grid;
+  width: 48px;
+  height: 39px;
+  place-items: center;
+  border: 3px solid #526054;
+  border-radius: 14px;
+  background: #99cdd8;
+  color: #354239;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.toonforge-transition-foot {
+  position: absolute;
+  bottom: -30px;
+  width: 22px;
+  height: 12px;
+  border-radius: 50%;
+  background: #657166;
+}
+
+.toonforge-transition-foot.left {
+  left: 23px;
+  transform: rotate(-18deg);
+}
+
+.toonforge-transition-foot.right {
+  right: 23px;
+  transform: rotate(18deg);
+}
+
+.toonforge-transition-title {
+  margin-top: 42px;
+  color: #354239;
+  font-size: clamp(24px, 5vw, 36px);
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  animation: toonforge-pop 0.6s ease-out both;
+}
+
+.toonforge-transition-caption {
+  margin-top: 10px;
+  color: #526054;
+  font-size: 14px;
+}
+
+.toonforge-transition-progress {
+  width: 190px;
+  height: 6px;
+  margin-top: 25px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ffffffb3;
+}
+
+.toonforge-transition-progress > div {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: #657166;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: toonforge-progress 1.6s linear forwards;
+}
+
+@keyframes toonforge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes toonforge-bounce {
+  from {
+    translate: 0 5px;
+    rotate: -5deg;
+  }
+  to {
+    translate: 0 -15px;
+    rotate: 5deg;
+  }
+}
+
+@keyframes toonforge-star {
+  from {
+    transform: scale(0.7) rotate(-15deg);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1.2) rotate(15deg);
+    opacity: 1;
+  }
+}
+
+@keyframes toonforge-pop {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toonforge-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toonforge-transition *,
+  .toonforge-transition *::before,
+  .toonforge-transition *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

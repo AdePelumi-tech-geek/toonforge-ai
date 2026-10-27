@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -11,7 +10,7 @@ import {
   type ReactNode,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type NavigationContextValue = {
   navigateTo: (href: string) => void;
@@ -40,20 +39,17 @@ export function useAnimationNavigation() {
   return context;
 }
 
-export default function AnimationNavigationProvider({
+export function AnimationNavigationProvider({
   children,
 }: {
   children: ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
 
   const [destination, setDestination] = useState<string | null>(null);
   const [portalReady, setPortalReady] = useState(false);
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const destinationRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -77,16 +73,16 @@ export default function AnimationNavigationProvider({
 
       const target = `${url.pathname}${url.search}${url.hash}`;
 
-      // Home, My Projects, and all non-creation pages navigate normally.
+      // These pages navigate normally without the transition.
       if (!CREATION_ROUTES.has(url.pathname)) {
         router.push(target);
         return;
       }
 
-      // Prevent repeated taps from restarting the animation.
+      // Prevent double-clicks from starting multiple transitions.
       if (destinationRef.current) return;
 
-      // Begin the animation immediately on the first tap.
+      // Start the transition immediately.
       destinationRef.current = target;
       setDestination(target);
 
@@ -114,11 +110,11 @@ export default function AnimationNavigationProvider({
         return;
       }
 
-      const target = event.target;
+      const clickedElement = event.target;
 
-      if (!(target instanceof Element)) return;
+      if (!(clickedElement instanceof Element)) return;
 
-      const anchor = target.closest("a[href]");
+      const anchor = clickedElement.closest("a[href]");
 
       if (!(anchor instanceof HTMLAnchorElement)) return;
 
@@ -133,7 +129,6 @@ export default function AnimationNavigationProvider({
 
       if (url.origin !== window.location.origin) return;
 
-      // Only intercept links leading to the three creation pages.
       if (!CREATION_ROUTES.has(url.pathname)) return;
 
       event.preventDefault();
@@ -157,7 +152,10 @@ export default function AnimationNavigationProvider({
           aria-label="Opening your creative workspace"
         >
           <div className="toonforge-transition-scene">
-            <div className="toonforge-transition-stars" aria-hidden="true">
+            <div
+              className="toonforge-transition-stars"
+              aria-hidden="true"
+            >
               <span>✦</span>
               <span>✧</span>
               <span>✨</span>
