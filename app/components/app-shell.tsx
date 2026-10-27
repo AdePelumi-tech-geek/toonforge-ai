@@ -1,9 +1,9 @@
-
 "use client";
 
 import { ReactNode, useState } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./sidebar";
+import { AnimationLaunchProvider } from "./animation-launcher";
 
 const pageTitles: Record<string, string> = {
   "/": "Welcome to your studio",
@@ -25,6 +25,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
   }
 
   return (
+    <AnimationLaunchProvider>
     <main className="min-h-screen bg-[#F7F5EF] text-[#657166]">
       {/* Desktop sidebar */}
       <aside
@@ -105,5 +106,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
         </div>
       </div>
     </main>
+    </AnimationLaunchProvider>
   );
 }

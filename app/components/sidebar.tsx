@@ -1,8 +1,8 @@
-
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useAnimationNavigation } from "./animation-navigation-provider";
 
 const navItems = [
   { label: "Home", href: "/", icon: "⌂" },
@@ -10,6 +10,12 @@ const navItems = [
   { label: "Script studio", href: "/script-studio", icon: "✎" },
   { label: "Characters", href: "/characters", icon: "♙" },
   { label: "My projects", href: "/my-projects", icon: "▧" },
+];
+
+const animatedRoutes = [
+  "/create-animation",
+  "/script-studio",
+  "/characters",
 ];
 
 type SidebarProps = {
@@ -26,21 +32,36 @@ export default function Sidebar({
   onToggleCollapse,
 }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
+  const { navigateTo } = useAnimationNavigation();
+
+  function handleNavigation(href: string) {
+    onNavigate?.();
+
+    if (animatedRoutes.includes(href)) {
+      navigateTo(href);
+      return;
+    }
+
+    // Home and My Projects navigate without the animation.
+    window.location.href = href;
+  }
 
   return (
     <div className="flex min-h-full flex-col">
       <div className="mb-10 flex items-center justify-between gap-3 px-2 pt-1">
         <Link
           href="/"
-          onClick={onNavigate}
+          onClick={(event) => {
+            event.preventDefault();
+            handleNavigation("/");
+          }}
           className="flex min-w-0 items-center gap-3"
         >
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#657166] text-2xl text-white">
             ✦
           </span>
 
-          {! collapsed && (
+          {!collapsed && (
             <span className="min-w-0">
               <span className="block text-xl font-black tracking-tight text-[#657166]">
                 ToonForge
@@ -77,24 +98,27 @@ export default function Sidebar({
               : pathname === item.href ||
                 pathname.startsWith(`${item.href}/`);
 
+          const className = `flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition ${
+            active
+              ? "bg-[#657166] text-white shadow-md"
+              : "text-[#657166] hover:bg-white/70"
+          } ${collapsed ? "justify-center px-2" : "text-left"}`;
+
           return (
-            <Link
+            <button
               key={item.href}
-              href={item.href}
-              onClick={onNavigate}
+              type="button"
+              onClick={() => handleNavigation(item.href)}
               title={collapsed ? item.label : undefined}
               aria-current={active ? "page" : undefined}
-              className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition ${
-                active
-                  ? "bg-[#657166] text-white shadow-md"
-                  : "text-[#657166] hover:bg-white/70"
-              } ${collapsed ? "justify-center px-2" : "text-left"}`}
+              className={className}
             >
               <span className="w-5 shrink-0 text-center text-lg">
                 {item.icon}
               </span>
+
               {!collapsed && item.label}
-            </Link>
+            </button>
           );
         })}
       </nav>
@@ -115,10 +139,8 @@ export default function Sidebar({
             </p>
 
             <button
-              onClick={() => {
-                router.push("/create-animation");
-                onNavigate?.();
-              }}
+              type="button"
+              onClick={() => handleNavigation("/create-animation")}
               className="mt-4 w-full rounded-xl bg-[#FDE8D3] px-3 py-3 text-sm font-bold text-[#657166] transition hover:bg-[#F3C3B2]"
             >
               Start creating →
@@ -141,17 +163,17 @@ export default function Sidebar({
           </div>
         </>
       )}
- 
-    {onToggleCollapse && (
+
+      {onToggleCollapse && (
         <button
-            onClick={onToggleCollapse}
-            className="mt-6 rounded-xl bg-white/70 px-3 py-3 text-[#657166] hover:bg-white"
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          onClick={onToggleCollapse}
+          className="mt-6 rounded-xl bg-white/70 px-3 py-3 text-[#657166] hover:bg-white"
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-        {collapsed ? "→" : "←"}
-    </button>
-    )}
+          {collapsed ? "→" : "←"}
+        </button>
+      )}
     </div>
   );
 }
