@@ -681,3 +681,207 @@ button {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* =========================================
+   TOONFORGE — RECENT PROJECTS GALAXY
+========================================= */
+
+.projects-galaxy {
+  isolation: isolate;
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(218, 235, 227, 0.9),
+      transparent 65%
+    ),
+    linear-gradient(135deg, #f7f5ef 0%, #eef3ed 50%, #fde8d3 100%);
+}
+
+.projects-galaxy::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  z-index: -1;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(153, 205, 216, 0.3) 55deg,
+    transparent 105deg,
+    rgba(218, 235, 227, 0.8) 160deg,
+    transparent 220deg,
+    rgba(243, 195, 178, 0.35) 280deg,
+    transparent 360deg
+  );
+  filter: blur(38px);
+  animation: projects-nebula-spin 24s linear infinite;
+}
+
+.projects-galaxy-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(82vw, 530px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(101, 113, 102, 0.2);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: projects-orbit-spin 18s linear infinite;
+}
+
+.projects-galaxy-orbit::before,
+.projects-galaxy-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(153, 205, 216, 0.55);
+  border-radius: 50%;
+}
+
+.projects-galaxy-orbit::before {
+  transform: rotateX(62deg) rotate(-25deg);
+}
+
+.projects-galaxy-orbit::after {
+  inset: 25%;
+  border-color: rgba(243, 195, 178, 0.8);
+  transform: rotateX(65deg) rotate(45deg);
+}
+
+.projects-galaxy-orbit-two {
+  width: min(65vw, 410px);
+  border-color: rgba(153, 205, 216, 0.45);
+  animation: projects-orbit-reverse 13s linear infinite;
+}
+
+.projects-galaxy-orbit-three {
+  width: min(46vw, 290px);
+  border-color: rgba(243, 195, 178, 0.65);
+  animation-duration: 9s;
+}
+
+.projects-galaxy-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(153, 205, 216, 0.55) 30%,
+    rgba(218, 235, 227, 0.1) 70%,
+    transparent 100%
+  );
+  filter: blur(5px);
+  transform: translate(-50%, -50%);
+  animation: projects-core-pulse 4s ease-in-out infinite;
+}
+
+.projects-galaxy-particle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #99cdd8;
+  box-shadow: 0 0 18px rgba(153, 205, 216, 0.9);
+  animation: projects-particle-float 4s ease-in-out infinite;
+}
+
+.projects-galaxy-particle:nth-child(2n) {
+  width: 13px;
+  height: 13px;
+  background: #f3c3b2;
+  box-shadow: 0 0 22px rgba(243, 195, 178, 0.9);
+  animation-delay: -1.5s;
+}
+
+.projects-galaxy-particle:nth-child(3n) {
+  width: 7px;
+  height: 7px;
+  background: #657166;
+  box-shadow: 0 0 16px rgba(101, 113, 102, 0.55);
+  animation-delay: -2.5s;
+}
+
+.projects-galaxy-content {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes projects-nebula-spin {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.12);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes projects-orbit-spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes projects-orbit-reverse {
+  from {
+    rotate: 360deg;
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+
+@keyframes projects-core-pulse {
+  0%,
+  100% {
+    scale: 0.8;
+    opacity: 0.55;
+  }
+  50% {
+    scale: 1.35;
+    opacity: 1;
+  }
+}
+
+@keyframes projects-particle-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 12px -18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .projects-galaxy-orbit {
+    width: 340px;
+  }
+
+  .projects-galaxy-orbit-two {
+    width: 270px;
+  }
+
+  .projects-galaxy-orbit-three {
+    width: 190px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projects-galaxy::before,
+  .projects-galaxy-orbit,
+  .projects-galaxy-core,
+  .projects-galaxy-particle {
+    animation: none !important;
+  }
+}
