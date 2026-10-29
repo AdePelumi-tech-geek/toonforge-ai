@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -32,7 +33,7 @@ export function useAnimationNavigation() {
 
   if (!context) {
     throw new Error(
-      "useAnimationNavigation must be used inside AnimationNavigationProvider."
+      "useAnimationNavigation must be used inside AnimationNavigationProvider.",
     );
   }
 
@@ -47,18 +48,18 @@ export function AnimationNavigationProvider({
   const router = useRouter();
 
   const [destination, setDestination] = useState<string | null>(null);
-  const [portalReady, setPortalReady] = useState(false);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const destinationRef = useRef<string | null>(null);
 
   useEffect(() => {
-    setPortalReady(true);
-
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
+
+      destinationRef.current = null;
     };
   }, []);
 
@@ -94,7 +95,7 @@ export function AnimationNavigationProvider({
         timeoutRef.current = null;
       }, ANIMATION_DURATION);
     },
-    [router]
+    [router],
   );
 
   const handleLinkClick = useCallback(
@@ -135,7 +136,7 @@ export function AnimationNavigationProvider({
 
       navigateTo(`${url.pathname}${url.search}${url.hash}`);
     },
-    [navigateTo]
+    [navigateTo],
   );
 
   return (
@@ -144,55 +145,56 @@ export function AnimationNavigationProvider({
         {children}
       </div>
 
-      {portalReady && destination && (
-        <div
-          className="toonforge-transition"
-          role="status"
-          aria-live="polite"
-          aria-label="Opening your creative workspace"
-        >
-          <div className="toonforge-transition-scene">
-            <div
-              className="toonforge-transition-stars"
-              aria-hidden="true"
-            >
-              <span>✦</span>
-              <span>✧</span>
-              <span>✨</span>
-              <span>✦</span>
-              <span>✧</span>
-            </div>
+      {destination &&
+        (
+          <div
+            className="toonforge-transition"
+            role="status"
+            aria-live="polite"
+            aria-label="Opening your creative workspace"
+          >
+            <div className="toonforge-transition-scene">
+              <div
+                className="toonforge-transition-stars"
+                aria-hidden="true"
+              >
+                <span>✦</span>
+                <span>✧</span>
+                <span>✨</span>
+                <span>✦</span>
+                <span>✧</span>
+              </div>
 
-            <div className="toonforge-transition-orbit">
-              <div className="toonforge-transition-character">
-                <div className="toonforge-transition-face">
-                  <span />
-                  <span />
+              <div className="toonforge-transition-orbit">
+                <div className="toonforge-transition-character">
+                  <div className="toonforge-transition-face">
+                    <span />
+                    <span />
+                  </div>
+
+                  <div className="toonforge-transition-smile" />
+
+                  <div className="toonforge-transition-body">TF</div>
+
+                  <div className="toonforge-transition-foot left" />
+                  <div className="toonforge-transition-foot right" />
                 </div>
+              </div>
 
-                <div className="toonforge-transition-smile" />
+              <h2 className="toonforge-transition-title">
+                LET&apos;S MAKE MAGIC!
+              </h2>
 
-                <div className="toonforge-transition-body">TF</div>
+              <p className="toonforge-transition-caption">
+                Your imagination is taking off...
+              </p>
 
-                <div className="toonforge-transition-foot left" />
-                <div className="toonforge-transition-foot right" />
+              <div className="toonforge-transition-progress">
+                <div />
               </div>
             </div>
-
-            <h2 className="toonforge-transition-title">
-              LET&apos;S MAKE MAGIC!
-            </h2>
-
-            <p className="toonforge-transition-caption">
-              Your imagination is taking off...
-            </p>
-
-            <div className="toonforge-transition-progress">
-              <div />
-            </div>
           </div>
-        </div>
-      )}
+        )}
     </NavigationContext.Provider>
   );
 }

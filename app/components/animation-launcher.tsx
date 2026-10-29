@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -40,18 +41,18 @@ export function AnimationLaunchProvider({
   const pathname = usePathname();
 
   const [launching, setLaunching] = useState(false);
-  const [portalReady, setPortalReady] = useState(false);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const launchingRef = useRef(false);
 
   useEffect(() => {
-    setPortalReady(true);
-
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
+
+      launchingRef.current = false;
     };
   }, []);
 
@@ -82,7 +83,6 @@ export function AnimationLaunchProvider({
       {children}
 
       {launching &&
-        portalReady &&
         createPortal(
           <div
             className="cartoon-launch-overlay"
