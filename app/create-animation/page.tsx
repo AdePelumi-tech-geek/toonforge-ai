@@ -79,39 +79,38 @@ function GalaxyDropdown({
   // `mousedown` is not dispatched for non-clickable elements) and on Escape.
   // Listeners only exist while the menu is open.
   useEffect(() => {
-    if (!open) return;
-
-    function handleOutsidePress(event: PointerEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        onToggle();
-      }
+    if (!open) {
+      return;
     }
 
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        onToggle();
-        triggerRef.current?.focus();
-      }
-    }
+    const updateListMaxHeight = () => {
+      if (!triggerRef.current) return;
 
-    document.addEventListener("pointerdown", handleOutsidePress);
-    document.addEventListener("keydown", handleEscape);
+      const rect = triggerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom - 16;
+      const spaceAbove = rect.top - 16;
+
+      setListMaxHeight(
+        Math.max(120, Math.min(280, Math.max(spaceBelow, spaceAbove))),
+      );
+    };
+
+    updateListMaxHeight();
+
+    window.addEventListener("resize", updateListMaxHeight);
+    window.addEventListener("scroll", updateListMaxHeight, true);
 
     return () => {
-      document.removeEventListener("pointerdown", handleOutsidePress);
-      document.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("resize", updateListMaxHeight);
+      window.removeEventListener("scroll", updateListMaxHeight, true);
     };
-  }, [open, onToggle]);
+  }, [open]);
 
   // The menu opens upward, so cap the scrolling list to the space that is
   // actually available between the sticky header and the toolbar. Without
   // this, the top of the menu is cut off or hidden under the header.
   useEffect(() => {
     if (!open) {
-      setListMaxHeight(null);
       return;
     }
 
