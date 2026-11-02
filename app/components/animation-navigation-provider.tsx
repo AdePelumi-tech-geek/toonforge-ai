@@ -11,10 +11,12 @@ import {
   type ReactNode,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { useRouter } from "next/navigation";
+
+import { usePathname, useRouter } from "next/navigation";
 
 type NavigationContextValue = {
   navigateTo: (href: string) => void;
+  completeNavigation: (pathname: string) => void;
 };
 
 const NavigationContext =
@@ -26,14 +28,12 @@ const CREATION_ROUTES = new Set([
   "/characters",
 ]);
 
-const ANIMATION_DURATION = 1600;
-
 export function useAnimationNavigation() {
   const context = useContext(NavigationContext);
 
   if (!context) {
     throw new Error(
-      "useAnimationNavigation must be used inside AnimationNavigationProvider.",
+      "useAnimationNavigation must be used inside AnimationNavigationProvider."
     );
   }
 
@@ -46,22 +46,11 @@ export function AnimationNavigationProvider({
   children: ReactNode;
 }) {
   const router = useRouter();
+  const currentPathname = usePathname();
 
   const [destination, setDestination] = useState<string | null>(null);
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const destinationRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-
-      destinationRef.current = null;
-    };
-  }, []);
+  const destinationPathRef = useRef<string | null>(null);
 
   const navigateTo = useCallback(
     (href: string) => {
@@ -74,29 +63,44 @@ export function AnimationNavigationProvider({
 
       const target = `${url.pathname}${url.search}${url.hash}`;
 
-      // These pages navigate normally without the transition.
       if (!CREATION_ROUTES.has(url.pathname)) {
         router.push(target);
         return;
       }
 
-      // Prevent double-clicks from starting multiple transitions.
-      if (destinationRef.current) return;
+      // Avoid starting another transition while one is active.
+      if (destinationPathRef.current) return;
 
-      // Start the transition immediately.
-      destinationRef.current = target;
-      setDestination(target);
-
-      timeoutRef.current = setTimeout(() => {
+      // No transition needed when already on the same creation page.
+      if (url.pathname === currentPathname) {
         router.push(target);
+        return;
+      }
 
-        destinationRef.current = null;
-        setDestination(null);
-        timeoutRef.current = null;
-      }, ANIMATION_DURATION);
+      // Remember the destination and show the loading animation.
+      destinationPathRef.current = url.pathname;
+      setDestination(url.pathname);
+
+      // Start navigation immediately.
+      router.push(target);
     },
-    [router],
+    [router, currentPathname]
   );
+
+  // Called by the destination page when it has mounted.
+  const completeNavigation = useCallback((pathname: string) => {
+    if (destinationPathRef.current !== pathname) return;
+
+    destinationPathRef.current = null;
+    setDestination(null);
+  }, []);
+
+  // Clean up when the provider unmounts.
+  useEffect(() => {
+    return () => {
+      destinationPathRef.current = null;
+    };
+  }, []);
 
   const handleLinkClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
@@ -129,72 +133,88 @@ export function AnimationNavigationProvider({
       const url = new URL(anchor.href);
 
       if (url.origin !== window.location.origin) return;
-
       if (!CREATION_ROUTES.has(url.pathname)) return;
 
       event.preventDefault();
 
-      navigateTo(`${url.pathname}${url.search}${url.hash}`);
+      navigateTo(
+        `${url.pathname}${url.search}${url.hash}`
+      );
     },
-    [navigateTo],
+    [navigateTo]
   );
 
   return (
-    <NavigationContext.Provider value={{ navigateTo }}>
+    <NavigationContext.Provider
+      value={{ navigateTo, completeNavigation }}
+    >
       <div onClickCapture={handleLinkClick}>
         {children}
       </div>
 
-      {destination &&
-        (
-          <div
-            className="toonforge-transition"
-            role="status"
-            aria-live="polite"
-            aria-label="Opening your creative workspace"
-          >
-            <div className="toonforge-transition-scene">
-              <div
-                className="toonforge-transition-stars"
-                aria-hidden="true"
-              >
-                <span>✦</span>
-                <span>✧</span>
-                <span>✨</span>
-                <span>✦</span>
-                <span>✧</span>
-              </div>
+      {destination && (
+        <div
+          className="toonforge-transition"
+          role="status"
+          aria-live="polite"
+          aria-label="Opening your creative workspace"
+        >
+          <div className="toonforge-transition-scene">
+            <div
+              className="toonforge-transition-stars"
+              aria-hidden="true"
+            >
+              <span>✦</span>
+              <span>✧</span>
+              <span>✨</span>
+              <span>✦</span>
+              <span>✧</span>
+            </div>
 
-              <div className="toonforge-transition-orbit">
-                <div className="toonforge-transition-character">
-                  <div className="toonforge-transition-face">
-                    <span />
-                    <span />
-                  </div>
-
-                  <div className="toonforge-transition-smile" />
-
-                  <div className="toonforge-transition-body">TF</div>
-
-                  <div className="toonforge-transition-foot left" />
-                  <div className="toonforge-transition-foot right" />
+            <div className="toonforge-transition-orbit">
+              <div className="toonforge-transition-character">
+                <div className="toonforge-transition-face">
+                  <span />
+                  <span />
                 </div>
-              </div>
 
-              <h2 className="toonforge-transition-title">
-                LET&apos;S MAKE MAGIC!
-              </h2>
+                <div className="toonforge-transition-smile" />
 
-              <p className="toonforge-transition-caption">
-                Your imagination is taking off...
-              </p>
+                <div className="toonforge-transition-body">TF</div>
 
-              <div className="toonforge-transition-progress">
-                <div />
+                <div className="toonforge-transition-foot left" />
+                <div className="toonforge-transition-foot right" />
               </div>
             </div>
+
+            <h2 className="toonforge-transition-title">
+              LET&apos;S MAKE MAGIC!
+            </h2>
+
+            <p className="toonforge-transition-caption">
+              Your imagination is taking off...
+            </p>
+
+            <div className="toonforge-transition-progress">
+              <div />
+            </div>
           </div>
-        )}
+        </div>
+      )}
     </NavigationContext.Provider>
+  );
+}
+
+// Add this component to each creation page.
+export function AnimationPageReady() {
+  const pathname = usePathname();
+  const { completeNavigation } = useAnimationNavigation();
+
+  useEffect(() => {
+    completeNavigation(pathname);
+  }, [pathname, completeNavigation]);
+
+  return (
+    <span className="hidden" aria-hidden="true" />
   );
 }

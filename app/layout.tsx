@@ -14,6 +14,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const AppShellWithChildren = AppShell as React.ComponentType<React.PropsWithChildren>;
+
 export const metadata: Metadata = {
   title: "ToonForge AI",
   description: "Bring your imagination to life with ToonForge AI.",
@@ -31,7 +33,7 @@ export default function RootLayout({
     >
       <body className="min-h-full">
         <AnimationNavigationProvider>
-          <AppShell>{children}</AppShell>
+          <AppShellWithChildren>{children}</AppShellWithChildren>
         </AnimationNavigationProvider>
       </body>
     </html>
