@@ -877,3 +877,22 @@ button {
     animation: none !important;
   }
 }
+
+/* Create Animation settings wizard transition */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[fadeSlide_\.25s_ease-out\] {
+    animation: none !important;
+  }
+}
