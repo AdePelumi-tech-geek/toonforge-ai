@@ -1,8 +1,10 @@
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
+  ArrowRight,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -107,7 +109,6 @@ const durationOptions = [
 ];
 
 const formatOptions = ["16:9", "9:16", "1:1"];
-
 const qualityOptions = ["720p", "1080p", "4K"];
 
 // ------------------------------------------------------
@@ -144,7 +145,6 @@ type Status = "idle" | "loading" | "success" | "error";
 
 // ------------------------------------------------------
 // GALAXY DROPDOWN
-// Existing dropdown design and positioning preserved.
 // ------------------------------------------------------
 
 function GalaxyDropdown({
@@ -666,7 +666,6 @@ function SettingsModal({
         aria-labelledby="settings-title"
         className="w-full max-w-xl overflow-hidden rounded-[28px] border border-white/20 bg-[#F7F8F5] text-[#252B26] shadow-2xl"
       >
-        {/* Modal header */}
         <header className="border-b border-[#657166]/15 bg-white px-5 py-4 sm:px-7">
           <div className="flex items-center justify-between">
             <div>
@@ -692,7 +691,6 @@ function SettingsModal({
             </button>
           </div>
 
-          {/* Progress indicator */}
           <div
             className="mt-5 flex items-center gap-1"
             aria-label={`Step ${step} of 4`}
@@ -724,13 +722,11 @@ function SettingsModal({
           </div>
         </header>
 
-        {/* Modal content */}
         <div className="max-h-[65vh] overflow-y-auto px-5 py-6 sm:px-7">
           <div
             key={step}
             className="animate-[fadeSlide_.25s_ease-out]"
           >
-            {/* STEP 1: VISUAL STYLE */}
             {step === 1 && (
               <>
                 <h3 className="text-2xl font-semibold">
@@ -776,7 +772,6 @@ function SettingsModal({
               </>
             )}
 
-            {/* STEP 2: VIDEO CONFIGURATION */}
             {step === 2 && (
               <>
                 <h3 className="text-2xl font-semibold">
@@ -823,7 +818,6 @@ function SettingsModal({
               </>
             )}
 
-            {/* STEP 3: AUDIO PREFERENCES */}
             {step === 3 && (
               <>
                 <h3 className="text-2xl font-semibold">
@@ -863,7 +857,6 @@ function SettingsModal({
               </>
             )}
 
-            {/* STEP 4: REVIEW */}
             {step === 4 && (
               <>
                 <h3 className="text-2xl font-semibold">
@@ -907,7 +900,6 @@ function SettingsModal({
           </div>
         </div>
 
-        {/* Modal footer */}
         <footer className="flex items-center justify-between gap-3 border-t border-[#657166]/15 bg-white px-5 py-4 sm:px-7">
           <button
             type="button"
@@ -988,7 +980,6 @@ export default function CreateAnimationPage() {
     null,
   );
 
-  // Clear pending preparation timer when the page unmounts.
   useEffect(() => {
     return () => {
       if (timer.current) {
@@ -1022,7 +1013,6 @@ export default function CreateAnimationPage() {
   // ----------------------------------------------------
 
   function handlePrepare() {
-    setOpenDropdown(null);
 
     if (status === "loading") return;
 
@@ -1040,7 +1030,6 @@ export default function CreateAnimationPage() {
     }
 
     setStatus("loading");
-
     setMessage("Preparing your animation concept…");
 
     // UI preparation simulation only.
@@ -1084,7 +1073,6 @@ export default function CreateAnimationPage() {
       style: value,
     }));
 
-    setOpenDropdown(null);
     resetFeedback();
   }
 
@@ -1096,7 +1084,6 @@ export default function CreateAnimationPage() {
       duration: value,
     }));
 
-    setOpenDropdown(null);
     resetFeedback();
   }
 
@@ -1107,12 +1094,7 @@ export default function CreateAnimationPage() {
   function saveSettings(next: Settings) {
     setSaved(next);
 
-    // Keep the existing dropdowns synchronised.
-    setStyle(next.style);
-    setDuration(next.duration);
-
     setModalOpen(false);
-    setOpenDropdown(null);
 
     setStatus("success");
 
@@ -1181,41 +1163,66 @@ export default function CreateAnimationPage() {
         {/* PROMPT COMPOSER */}
 
         <div className="w-full rounded-[24px] border border-white/15 bg-[#F7F8F5]/95 p-3 shadow-[0_25px_90px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-300 focus-within:border-violet-400/60 sm:rounded-[32px] sm:p-5">
-          <label
-            htmlFor="animation-prompt"
-            className="sr-only"
-          >
-            Describe your animation idea
-          </label>
 
-          <textarea
-            id="animation-prompt"
-            value={prompt}
-            onChange={(event) => {
-              setPrompt(event.target.value);
-              resetFeedback();
-            }}
-            onKeyDown={(event) => {
-              if (
-                event.key === "Enter" &&
-                !event.shiftKey &&
-                !event.nativeEvent.isComposing &&
-                event.nativeEvent.keyCode !== 229
-              ) {
-                event.preventDefault();
-                handlePrepare();
-              }
-            }}
-            placeholder="Imagine a world where..."
-            rows={3}
-            className="min-h-[90px] w-full resize-none border-0 bg-transparent px-3 py-3 text-base leading-8 text-[#303830] outline-none placeholder:text-[#657166]/60 focus:ring-0 sm:min-h-[115px] sm:px-4 sm:text-lg"
-          />
+          {/* PROMPT INPUT + SEND BUTTON */}
+
+          <div className="relative">
+            <label
+              htmlFor="animation-prompt"
+              className="sr-only"
+            >
+              Describe your animation idea
+            </label>
+
+            <textarea
+              id="animation-prompt"
+              value={prompt}
+              onChange={(event) => {
+                setPrompt(event.target.value);
+                resetFeedback();
+              }}
+              onKeyDown={(event) => {
+                if (
+                  event.key === "Enter" &&
+                  !event.shiftKey &&
+                  !event.nativeEvent.isComposing &&
+                  event.nativeEvent.keyCode !== 229
+                ) {
+                  event.preventDefault();
+                  handlePrepare();
+                }
+              }}
+              placeholder="Imagine a world where..."
+              rows={3}
+              className="min-h-[90px] w-full resize-none border-0 bg-transparent px-3 py-3 pr-16 text-base leading-8 text-[#303830] outline-none placeholder:text-[#657166]/60 focus:ring-0 sm:min-h-[115px] sm:px-4 sm:pr-20 sm:text-lg"
+            />
+
+            {/* SEND ARROW BUTTON - TOP RIGHT */}
+
+            <button
+              type="button"
+              onClick={handlePrepare}
+              disabled={status === "loading"}
+              aria-label="Send animation prompt"
+              className="absolute right-2 top-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-[0_6px_25px_rgba(124,58,237,0.3)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_8px_35px_rgba(124,58,237,0.5)] active:scale-95 disabled:cursor-wait disabled:opacity-70 sm:right-3 sm:top-3 sm:h-12 sm:w-12"
+            >
+              {status === "loading" ? (
+                <Loader2 className="h-6 w-6 animate-spin" />
+              ) : (
+                <ArrowRight
+                  className="h-6 w-6"
+                  strokeWidth={2.5}
+                />
+              )}
+            </button>
+          </div>
 
           {/* COMPOSER TOOLBAR */}
 
           <div className="relative z-20 flex flex-wrap items-center justify-between gap-3 border-t border-[#657166]/15 px-1 pt-3 sm:px-2 sm:pt-4">
-            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:gap-3">
 
+              {/* STYLE DROPDOWN */}
               <GalaxyDropdown
                 id="animation-style"
                 label="Style"
@@ -1224,9 +1231,12 @@ export default function CreateAnimationPage() {
                 options={styleOptions}
                 open={openDropdown === "style"}
                 onToggle={() => toggleDropdown("style")}
-                onSelect={changeStyle}
+                onSelect={(value) => {
+                  changeStyle(value);
+                  setOpenDropdown(null);
+                }}
               />
-
+          {/* DURATION DROPDOWN */}
               <GalaxyDropdown
                 id="animation-duration"
                 label="Duration"
@@ -1234,10 +1244,11 @@ export default function CreateAnimationPage() {
                 value={duration}
                 options={durationOptions}
                 open={openDropdown === "duration"}
-                onToggle={() =>
-                  toggleDropdown("duration")
-                }
-                onSelect={changeDuration}
+                onToggle={() => toggleDropdown("duration")}
+                onSelect={(value) => {
+                  changeDuration(value);
+                  setOpenDropdown(null);
+                }}
               />
 
               {/* SETTINGS BUTTON */}
@@ -1249,31 +1260,13 @@ export default function CreateAnimationPage() {
                   setModalOpen(true);
                 }}
                 aria-label="Open animation settings"
-                className="flex h-12 shrink-0 items-center gap-2 rounded-2xl border border-[#657166]/20 bg-white px-3 text-sm font-semibold text-[#405346] transition hover:border-violet-300 hover:text-violet-700 sm:px-4"
+                className="flex h-12 shrink-0 items-center gap-2 rounded-2xl border border-[#657166]/20 bg-white px-4 text-sm font-semibold text-[#405346] transition hover:border-violet-300 hover:text-violet-700"
               >
                 <Settings2 className="h-4 w-4" />
-
-                <span className="hidden sm:inline">
-                  Settings
-                </span>
+                 <span>Settings</span>
               </button>
+
             </div>
-
-            {/* PREPARE BUTTON */}
-
-            <button
-              type="button"
-              onClick={handlePrepare}
-              disabled={status === "loading"}
-              aria-label="Prepare animation"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-[0_6px_25px_rgba(124,58,237,0.3)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_8px_35px_rgba(124,58,237,0.5)] active:scale-95 disabled:cursor-wait disabled:opacity-70"
-            >
-              {status === "loading" ? (
-                <Loader2 className="h-6 w-6 animate-spin" />
-              ) : (
-                <Sparkles className="h-6 w-6" />
-              )}
-            </button>
           </div>
 
           {/* FEEDBACK */}
